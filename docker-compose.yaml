@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  go:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: local
+    container_name: 2d_game
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app

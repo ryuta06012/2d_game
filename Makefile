@@ -4,4 +4,4 @@ down:
 	docker-compose down
 
 app_exec:
-	docker-compose exec 2d_game bash
+	docker-compose exec go /bin/sh

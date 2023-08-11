@@ -1,9 +1,9 @@
-FROM golang:1.18-alpine as local
+FROM golang:1.20 as local
 
 WORKDIR /app
 
-# install golang migrate (migration tool)
-RUN go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.15.0
+RUN apt-get update \
+    && apt-get install -y pkg-config gcc libgl1-mesa-dev xorg-dev
 
 # install air (hot reload tool)
 RUN go install github.com/cosmtrek/air@v1.40.2

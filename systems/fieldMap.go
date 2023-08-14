@@ -9,7 +9,7 @@ import (
 	"github.com/EngoEngine/engo/common"
 )
 
-var tiles = [][]int{
+var Tiles = [][]int{
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	{1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
 	{1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1},
@@ -64,7 +64,7 @@ func (cb *TileBuildingSystem) generateFields() {
 	wallInnerColor := color.RGBA{0, 0, 0, 255}
 	fieldsTiles := make([]*Tile, 0)
 
-	for y, row := range tiles {
+	for y, row := range Tiles {
 		for x, cell := range row {
 			if cell == 1 {
 				tile := &Tile{BasicEntity: ecs.NewBasic()}
@@ -79,7 +79,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					Scale:    engo.Point{X: 1, Y: 1},
 				}
 				fieldsTiles = append(fieldsTiles, tile)
-				if x > 0 && tiles[y][x-1] == 1 {
+				if x > 0 && Tiles[y][x-1] == 1 {
 					blackTile := &Tile{BasicEntity: ecs.NewBasic()}
 					blackTile.SpaceComponent = common.SpaceComponent{
 						Position: engo.Point{X: float32(x) * tileSize, Y: float32(y)*tileSize + wallOffset},
@@ -93,7 +93,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					}
 					fieldsTiles = append(fieldsTiles, blackTile)
 				}
-				if x < len(tiles[0])-1 && tiles[y][x+1] == 1 {
+				if x < len(Tiles[0])-1 && Tiles[y][x+1] == 1 {
 					blackTile := &Tile{BasicEntity: ecs.NewBasic()}
 					blackTile.SpaceComponent = common.SpaceComponent{
 						Position: engo.Point{X: float32(x)*tileSize + wallOffset, Y: float32(y)*tileSize + wallOffset},
@@ -107,7 +107,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					}
 					fieldsTiles = append(fieldsTiles, blackTile)
 				}
-				if y < len(tiles)-1 && tiles[y+1][x] == 1 {
+				if y < len(Tiles)-1 && Tiles[y+1][x] == 1 {
 					blackTile := &Tile{BasicEntity: ecs.NewBasic()}
 					blackTile.SpaceComponent = common.SpaceComponent{
 						Position: engo.Point{X: float32(x)*tileSize + wallOffset, Y: float32(y)*tileSize + wallOffset},
@@ -122,7 +122,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					fieldsTiles = append(fieldsTiles, blackTile)
 				}
 
-				if y > 0 && tiles[y-1][x] == 1 {
+				if y > 0 && Tiles[y-1][x] == 1 {
 					blackTile := &Tile{BasicEntity: ecs.NewBasic()}
 					blackTile.SpaceComponent = common.SpaceComponent{
 						Position: engo.Point{X: float32(x)*tileSize + wallOffset, Y: float32(y) * tileSize},
@@ -154,7 +154,9 @@ func (cb *TileBuildingSystem) generateFields() {
 
 // Update is ran every frame, with `dt` being the time
 // in seconds since the last frame
-func (cb *TileBuildingSystem) Update(dt float32) {}
+func (cb *TileBuildingSystem) Update(dt float32) {
+
+}
 
 // Update is ran every frame, with `dt` being the time
 // in seconds since the last frame

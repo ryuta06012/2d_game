@@ -61,12 +61,18 @@ func (cb *TileBuildingSystem) generateFields() {
 	tileSize := float32(32)
 	wallSpaceWidth := tileSize / 1.6
 	wallOffset := (tileSize - wallSpaceWidth) / 2
-	wallInnerColor := color.RGBA{0, 0, 0, 255}
+	//wallInnerColor := color.RGBA{0, 0, 0, 255}
 	fieldsTiles := make([]*Tile, 0)
 
 	for y, row := range Tiles {
 		for x, cell := range row {
 			if cell == 1 {
+				colors := color.RGBA{0, 0, 255, 255}
+				/* if x%2 == 0 {
+					colors = color.RGBA{0, 0, 255, 255}
+				} else {
+					colors = color.RGBA{100, 0, 255, 255}
+				} */
 				tile := &Tile{BasicEntity: ecs.NewBasic()}
 				tile.SpaceComponent = common.SpaceComponent{
 					Position: engo.Point{X: float32(x) * tileSize, Y: float32(y) * tileSize},
@@ -75,7 +81,7 @@ func (cb *TileBuildingSystem) generateFields() {
 				}
 				tile.RenderComponent = common.RenderComponent{
 					Drawable: common.Rectangle{},
-					Color:    color.RGBA{0, 0, 255, 255},
+					Color:    colors,
 					Scale:    engo.Point{X: 1, Y: 1},
 				}
 				fieldsTiles = append(fieldsTiles, tile)
@@ -88,7 +94,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					}
 					blackTile.RenderComponent = common.RenderComponent{
 						Drawable: common.Rectangle{},
-						Color:    wallInnerColor,
+						Color:    color.RGBA{0, 0, 255, 255},
 						Scale:    engo.Point{X: 1, Y: 1},
 					}
 					fieldsTiles = append(fieldsTiles, blackTile)
@@ -102,7 +108,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					}
 					blackTile.RenderComponent = common.RenderComponent{
 						Drawable: common.Rectangle{},
-						Color:    wallInnerColor,
+						Color:    color.RGBA{0, 255, 0, 255},
 						Scale:    engo.Point{X: 1, Y: 1},
 					}
 					fieldsTiles = append(fieldsTiles, blackTile)
@@ -116,7 +122,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					}
 					blackTile.RenderComponent = common.RenderComponent{
 						Drawable: common.Rectangle{},
-						Color:    wallInnerColor,
+						Color:    color.RGBA{255, 0, 0, 255},
 						Scale:    engo.Point{X: 1, Y: 1},
 					}
 					fieldsTiles = append(fieldsTiles, blackTile)
@@ -131,7 +137,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					}
 					blackTile.RenderComponent = common.RenderComponent{
 						Drawable: common.Rectangle{},
-						Color:    wallInnerColor,
+						Color:    color.RGBA{255, 0, 0, 255},
 						Scale:    engo.Point{X: 1, Y: 1},
 					}
 					fieldsTiles = append(fieldsTiles, blackTile)

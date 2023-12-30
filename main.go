@@ -23,7 +23,16 @@ func (*myScene) Preload() {
 		"icon/pacman_open_up.png",
 		"icon/pacman_open_left.png",
 		"icon/pacman_open_right.png",
-		"icon/pacman_open_down.png")
+		"icon/pacman_open_down.png",
+		"icon/pacman_up_open.png",
+		"icon/pacman_up_middle.png",
+		"icon/pacman_down_open.png",
+		"icon/pacman_down_middle.png",
+		"icon/pacman_left_open.png",
+		"icon/pacman_left_middle.png",
+		"icon/pacman_right_open.png",
+		"icon/pacman_right_middle.png",
+	)
 }
 
 // Setup is called before the main loop starts. It allows you

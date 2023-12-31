@@ -13,13 +13,14 @@ type Food struct {
 	ecs.BasicEntity
 	common.RenderComponent
 	common.SpaceComponent
+	mapX  int
+	mapY  int
 	isEat bool
 }
 
 type FoodSystem struct {
 	world      *ecs.World
 	foodEntity []*Food
-	isAte      bool
 	foodColor  color.RGBA
 }
 
@@ -53,6 +54,8 @@ func (f *FoodSystem) generateFoodsInFields() {
 					Color:    color.RGBA{254, 184, 151, 255},
 					Scale:    engo.Point{X: 1, Y: 1},
 				}
+				food.mapX = x
+				food.mapY = y
 				f.foodEntity = append(f.foodEntity, food)
 			}
 		}
@@ -70,20 +73,20 @@ func (f *FoodSystem) generateFoodsInFields() {
 // Update is ran every frame, with `dt` being the time
 // in seconds since the last frame
 func (f *FoodSystem) Update(dt float32) {
-	// var playerPositionX float32
-	// var playerPositionY float32
+	var playerPositionX float32
+	var playerPositionY float32
 	var playerMapX int
 	var playerMapY int
 	for _, system := range f.world.Systems() {
 		switch sys := system.(type) {
 		case *PlayerMovementSystem:
-			// playerPositionX = sys.playerEntity.SpaceComponent.Position.X
-			// playerPositionY = sys.playerEntity.SpaceComponent.Position.Y
+			playerPositionX = sys.playerEntity.SpaceComponent.Position.X
+			playerPositionY = sys.playerEntity.SpaceComponent.Position.Y
 			playerMapX = sys.GetMapX()
 			playerMapY = sys.GetMapY()
 		}
 	}
-	var count int=0
+	var count int = 0
 	// for y, tile := range Tiles {
 	// 	for x, cell := range tile {
 	// 		if cell == 2 && playerMapX == x && playerMapY == y {
@@ -92,6 +95,7 @@ func (f *FoodSystem) Update(dt float32) {
 	// 	}
 	// }
 	for i, food := range f.foodEntity {
+		// if int((food.SpaceComponent.Position.X-wallOffset)/32) == int(4) {
 		fmt.Printf("i: %v\n", i)
 		fmt.Printf("count: %v\n", count)
 		fmt.Printf("food.SpaceComponent.Position.X: %v\n", food.SpaceComponent.Position.X)
@@ -102,10 +106,22 @@ func (f *FoodSystem) Update(dt float32) {
 		// fmt.Printf("playerPosition: %v\n", playerPositionY+16)
 		fmt.Printf("int((food.SpaceComponent.Position.X - wallOffset) / 32): %v\n", int((food.SpaceComponent.Position.X-wallOffset)/32))
 		fmt.Printf("int((food.SpaceComponent.Position.Y - wallOffset) / 32): %v\n", int((food.SpaceComponent.Position.Y-wallOffset)/32))
+		fmt.Printf("playerPositionX: %v\n", playerPositionX)
+		fmt.Printf("playerPositionY: %v\n", playerPositionY)
 		fmt.Printf("playerMapX: %v\n", playerMapX)
 		fmt.Printf("playerMapY: %v\n", playerMapY)
 		fmt.Printf("wallOffset: %v\n", wallOffset)
-		if food.isEat != true && int((food.SpaceComponent.Position.X - wallOffset) / 32) == playerMapX && int((food.SpaceComponent.Position.Y - wallOffset) / 32) == playerMapY {
+		fmt.Printf("food.isEat: %v\n", food.isEat)
+		// }
+		if food.isEat == false && food.mapX == playerMapX && food.mapY == playerMapY {
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
 			println("#################################")
 			food.isEat = true
 			food.RenderComponent.Color = color.RGBA{0, 0, 0, 255}

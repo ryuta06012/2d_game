@@ -148,9 +148,9 @@ var animation int = 0
 var animationFrame uint64 = 5
 
 func (pms *PlayerMovementSystem) changeDirectionTexture() {
-	fmt.Printf("frame: %v\n", frame)
-	fmt.Printf("animationFrame: %v\n", animationFrame)
-	fmt.Printf("pms.direction: %v\n", pms.direction)
+	// fmt.Printf("frame: %v\n", frame)
+	// fmt.Printf("animationFrame: %v\n", animationFrame)
+	// fmt.Printf("pms.direction: %v\n", pms.direction)
 	switch pms.direction {
 	case DIRECTION_RIGHT: // Right
 		if frame%animationFrame == 0 {
@@ -164,7 +164,7 @@ func (pms *PlayerMovementSystem) changeDirectionTexture() {
 		}
 	case DIRECTION_LEFT: // Left
 		if frame%animationFrame == 0 {
-			fmt.Println("##############")
+			// fmt.Println("##############")
 			texture, err := common.LoadedSprite(AnimationPatternLeft[animation])
 			if err != nil {
 				fmt.Println("Unable to load texture: " + err.Error())
@@ -214,25 +214,15 @@ func (pms *PlayerMovementSystem) changeDirectionIfPossible() {
 	pms.moveAdd()
 	if pms.checkCollisions() {
 		pms.moveDecrease()
-		fmt.Printf("tempDirection: %v\n", tempDirection)
-		fmt.Printf("pms.nextDirection: %v\n", pms.nextDirection)
-		fmt.Printf("pms.direction: %v\n", pms.direction)
-		fmt.Println("false")
+		// fmt.Printf("tempDirection: %v\n", tempDirection)
+		// fmt.Printf("pms.nextDirection: %v\n", pms.nextDirection)
+		// fmt.Printf("pms.direction: %v\n", pms.direction)
+		// fmt.Println("false")
 		pms.direction = tempDirection
 	} else {
-		fmt.Printf("pms.nextDirection: %v\n", pms.nextDirection)
-		fmt.Printf("pms.direction: %v\n", pms.direction)
-		fmt.Println("###############################")
-		fmt.Println("###############################")
-		fmt.Println("###############################")
-		fmt.Println("###############################")
-		fmt.Println("###############################")
-		fmt.Println("###############################")
-		fmt.Println("###############################")
-		fmt.Println("###############################")
-		fmt.Println("###############################")
-		fmt.Println("###############################")
-		fmt.Println("###############################")
+		// fmt.Printf("pms.nextDirection: %v\n", pms.nextDirection)
+		// fmt.Printf("pms.direction: %v\n", pms.direction)
+		// fmt.Println("###############################")
 		pms.moveDecrease()
 		//pms.changeDirectionTexture()
 	}

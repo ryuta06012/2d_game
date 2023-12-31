@@ -13,12 +13,15 @@ type Food struct {
 	ecs.BasicEntity
 	common.RenderComponent
 	common.SpaceComponent
+	mapX  int
+	mapY  int
+	isEat bool
 }
 
 type FoodSystem struct {
-	world *ecs.World
-	food  *Food
-	isAte bool
+	world      *ecs.World
+	foodEntity []*Food
+	foodColor  color.RGBA
 }
 
 func (f *FoodSystem) New(w *ecs.World) {
@@ -27,32 +30,40 @@ func (f *FoodSystem) New(w *ecs.World) {
 	f.generateFoodsInFields()
 }
 
+var wallOffset float32
+
 func (f *FoodSystem) generateFoodsInFields() {
 	tileSize := float32(32)
-	foodColor := color.RGBA{254, 184, 151, 255}
-	fieldsFoods := make([]*Food, 0)
+	wallSpaceWidth := tileSize / 6
+	wallOffset = (tileSize - wallSpaceWidth) / 2
+	//wallInnerColor := color.RGBA{0, 0, 0, 255}
+	f.foodColor = color.RGBA{254, 184, 151, 255}
 	for y, row := range Tiles {
 		for x, cell := range row {
 			if cell == 2 {
 				food := &Food{BasicEntity: ecs.NewBasic()}
 				food.SpaceComponent = common.SpaceComponent{
-					Position: engo.Point{X: float32(x) * tileSize + tileSize/4, Y: float32(y) * tileSize + tileSize/4},
-					Width:    tileSize,
-					Height:   tileSize,
+					Position: engo.Point{X: float32(x)*tileSize + wallOffset, Y: float32(y)*tileSize + wallOffset},
+					Width:    wallSpaceWidth,
+					Height:   wallSpaceWidth,
 				}
+				fmt.Printf("food.SpaceComponent.Position.X: %v\n", food.SpaceComponent.Position.X)
+				fmt.Printf("food.SpaceComponent.Position.Y: %v\n", food.SpaceComponent.Position.Y)
 				food.RenderComponent = common.RenderComponent{
 					Drawable: common.Rectangle{},
-					Color:    foodColor,
-					Scale:    engo.Point{X: 0.3, Y: 0.3},
+					Color:    color.RGBA{254, 184, 151, 255},
+					Scale:    engo.Point{X: 1, Y: 1},
 				}
-				fieldsFoods = append(fieldsFoods, food)
+				food.mapX = x
+				food.mapY = y
+				f.foodEntity = append(f.foodEntity, food)
 			}
 		}
 	}
 	for _, system := range f.world.Systems() {
 		switch sys := system.(type) {
 		case *common.RenderSystem:
-			for _, v := range fieldsFoods {
+			for _, v := range f.foodEntity {
 				sys.Add(&v.BasicEntity, &v.RenderComponent, &v.SpaceComponent)
 			}
 		}
@@ -61,8 +72,63 @@ func (f *FoodSystem) generateFoodsInFields() {
 
 // Update is ran every frame, with `dt` being the time
 // in seconds since the last frame
-func (*FoodSystem) Update(dt float32) {
+func (f *FoodSystem) Update(dt float32) {
+	var playerPositionX float32
+	var playerPositionY float32
+	var playerMapX int
+	var playerMapY int
+	for _, system := range f.world.Systems() {
+		switch sys := system.(type) {
+		case *PlayerMovementSystem:
+			playerPositionX = sys.playerEntity.SpaceComponent.Position.X
+			playerPositionY = sys.playerEntity.SpaceComponent.Position.Y
+			playerMapX = sys.GetMapX()
+			playerMapY = sys.GetMapY()
+		}
+	}
+	var count int = 0
+	// for y, tile := range Tiles {
+	// 	for x, cell := range tile {
+	// 		if cell == 2 && playerMapX == x && playerMapY == y {
 
+	// 		}
+	// 	}
+	// }
+	for i, food := range f.foodEntity {
+		// if int((food.SpaceComponent.Position.X-wallOffset)/32) == int(4) {
+		fmt.Printf("i: %v\n", i)
+		fmt.Printf("count: %v\n", count)
+		fmt.Printf("food.SpaceComponent.Position.X: %v\n", food.SpaceComponent.Position.X)
+		fmt.Printf("food.SpaceComponent.Position.Y: %v\n", food.SpaceComponent.Position.Y)
+		// fmt.Printf("food.SpaceComponent.Position.X+wallOffset/2: %v\n", food.SpaceComponent.Position.X+wallOffset/2)
+		// fmt.Printf("food.SpaceComponent.Position.Y+wallOffset/2: %v\n", food.SpaceComponent.Position.Y+wallOffset/2)
+		// fmt.Printf("playerPositionX: %v\n", playerPositionX+16)
+		// fmt.Printf("playerPosition: %v\n", playerPositionY+16)
+		fmt.Printf("int((food.SpaceComponent.Position.X - wallOffset) / 32): %v\n", int((food.SpaceComponent.Position.X-wallOffset)/32))
+		fmt.Printf("int((food.SpaceComponent.Position.Y - wallOffset) / 32): %v\n", int((food.SpaceComponent.Position.Y-wallOffset)/32))
+		fmt.Printf("playerPositionX: %v\n", playerPositionX)
+		fmt.Printf("playerPositionY: %v\n", playerPositionY)
+		fmt.Printf("playerMapX: %v\n", playerMapX)
+		fmt.Printf("playerMapY: %v\n", playerMapY)
+		fmt.Printf("wallOffset: %v\n", wallOffset)
+		fmt.Printf("food.isEat: %v\n", food.isEat)
+		// }
+		if food.isEat == false && food.mapX == playerMapX && food.mapY == playerMapY {
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			println("#################################")
+			food.isEat = true
+			food.RenderComponent.Color = color.RGBA{0, 0, 0, 255}
+			break
+		}
+		count++
+	}
 }
 
 // Update is ran every frame, with `dt` being the time

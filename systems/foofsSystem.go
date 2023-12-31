@@ -3,6 +3,7 @@ package systems
 import (
 	"fmt"
 	"image/color"
+	"log"
 
 	"github.com/EngoEngine/ecs"
 	"github.com/EngoEngine/engo"
@@ -18,14 +19,32 @@ type Food struct {
 	isEat bool
 }
 
-type FoodSystem struct {
-	world      *ecs.World
-	foodEntity []*Food
-	foodColor  color.RGBA
+type Audio struct {
+	ecs.BasicEntity
+	common.AudioComponent
 }
+
+type FoodSystem struct {
+	world       *ecs.World
+	foodEntity  []*Food
+	foodColor   color.RGBA
+	audioEntity []*Audio
+}
+
+var AudioFile []string = []string{"sounds/chewing_sound_pattern1.mp3", "sounds/chewing_sound_pattern2.mp3"}
 
 func (f *FoodSystem) New(w *ecs.World) {
 	f.world = w
+	for i := 0; i < 2; i++ {
+		audio := &Audio{BasicEntity: ecs.NewBasic()}
+		player, err := common.LoadedPlayer(AudioFile[i])
+		if err != nil {
+			log.Println(err)
+		}
+		player.SetVolume(0.5)
+		audio.AudioComponent = common.AudioComponent{Player: player}
+		f.audioEntity = append(f.audioEntity, audio)
+	}
 	fmt.Println("TileBuildingSystem was added to the Scene")
 	f.generateFoodsInFields()
 }
@@ -38,6 +57,7 @@ func (f *FoodSystem) generateFoodsInFields() {
 	wallOffset = (tileSize - wallSpaceWidth) / 2
 	//wallInnerColor := color.RGBA{0, 0, 0, 255}
 	f.foodColor = color.RGBA{254, 184, 151, 255}
+
 	for y, row := range Tiles {
 		for x, cell := range row {
 			if cell == 2 {
@@ -47,8 +67,6 @@ func (f *FoodSystem) generateFoodsInFields() {
 					Width:    wallSpaceWidth,
 					Height:   wallSpaceWidth,
 				}
-				fmt.Printf("food.SpaceComponent.Position.X: %v\n", food.SpaceComponent.Position.X)
-				fmt.Printf("food.SpaceComponent.Position.Y: %v\n", food.SpaceComponent.Position.Y)
 				food.RenderComponent = common.RenderComponent{
 					Drawable: common.Rectangle{},
 					Color:    color.RGBA{254, 184, 151, 255},
@@ -66,6 +84,10 @@ func (f *FoodSystem) generateFoodsInFields() {
 			for _, v := range f.foodEntity {
 				sys.Add(&v.BasicEntity, &v.RenderComponent, &v.SpaceComponent)
 			}
+		case *common.AudioSystem:
+			for _, v := range f.audioEntity {
+				sys.Add(&v.BasicEntity, &v.AudioComponent)
+			}
 		}
 	}
 }
@@ -73,61 +95,39 @@ func (f *FoodSystem) generateFoodsInFields() {
 // Update is ran every frame, with `dt` being the time
 // in seconds since the last frame
 func (f *FoodSystem) Update(dt float32) {
-	var playerPositionX float32
-	var playerPositionY float32
 	var playerMapX int
 	var playerMapY int
+	var playerDirection int
+
 	for _, system := range f.world.Systems() {
 		switch sys := system.(type) {
 		case *PlayerMovementSystem:
-			playerPositionX = sys.playerEntity.SpaceComponent.Position.X
-			playerPositionY = sys.playerEntity.SpaceComponent.Position.Y
 			playerMapX = sys.GetMapX()
 			playerMapY = sys.GetMapY()
+			playerDirection = sys.direction
 		}
 	}
 	var count int = 0
-	// for y, tile := range Tiles {
-	// 	for x, cell := range tile {
-	// 		if cell == 2 && playerMapX == x && playerMapY == y {
-
-	// 		}
-	// 	}
-	// }
-	for i, food := range f.foodEntity {
-		// if int((food.SpaceComponent.Position.X-wallOffset)/32) == int(4) {
-		fmt.Printf("i: %v\n", i)
-		fmt.Printf("count: %v\n", count)
-		fmt.Printf("food.SpaceComponent.Position.X: %v\n", food.SpaceComponent.Position.X)
-		fmt.Printf("food.SpaceComponent.Position.Y: %v\n", food.SpaceComponent.Position.Y)
-		// fmt.Printf("food.SpaceComponent.Position.X+wallOffset/2: %v\n", food.SpaceComponent.Position.X+wallOffset/2)
-		// fmt.Printf("food.SpaceComponent.Position.Y+wallOffset/2: %v\n", food.SpaceComponent.Position.Y+wallOffset/2)
-		// fmt.Printf("playerPositionX: %v\n", playerPositionX+16)
-		// fmt.Printf("playerPosition: %v\n", playerPositionY+16)
-		fmt.Printf("int((food.SpaceComponent.Position.X - wallOffset) / 32): %v\n", int((food.SpaceComponent.Position.X-wallOffset)/32))
-		fmt.Printf("int((food.SpaceComponent.Position.Y - wallOffset) / 32): %v\n", int((food.SpaceComponent.Position.Y-wallOffset)/32))
-		fmt.Printf("playerPositionX: %v\n", playerPositionX)
-		fmt.Printf("playerPositionY: %v\n", playerPositionY)
-		fmt.Printf("playerMapX: %v\n", playerMapX)
-		fmt.Printf("playerMapY: %v\n", playerMapY)
-		fmt.Printf("wallOffset: %v\n", wallOffset)
-		fmt.Printf("food.isEat: %v\n", food.isEat)
-		// }
+	for _, food := range f.foodEntity {
 		if food.isEat == false && food.mapX == playerMapX && food.mapY == playerMapY {
-			println("#################################")
-			println("#################################")
-			println("#################################")
-			println("#################################")
-			println("#################################")
-			println("#################################")
-			println("#################################")
-			println("#################################")
-			println("#################################")
+			println(food.mapX%2)
+			println(food.mapY%2)
+			f.selectAudioPlayerByDirection(f.audioEntity, playerDirection, food.mapX, food.mapY)
 			food.isEat = true
 			food.RenderComponent.Color = color.RGBA{0, 0, 0, 255}
 			break
 		}
 		count++
+	}
+}
+
+func (f *FoodSystem) selectAudioPlayerByDirection(audioEntity []*Audio, direction, x, y int) {
+	if direction == 1 || direction == 2 {
+		audioEntity[y%2].Player.Play()
+		audioEntity[y%2].Player.Rewind()
+	} else {
+		audioEntity[x%2].Player.Play()
+		audioEntity[x%2].Player.Rewind()
 	}
 }
 

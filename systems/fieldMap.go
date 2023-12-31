@@ -94,7 +94,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					}
 					blackTile.RenderComponent = common.RenderComponent{
 						Drawable: common.Rectangle{},
-						Color:    color.RGBA{0, 0, 255, 255},
+						Color:    color.RGBA{0, 0, 0, 255},
 						Scale:    engo.Point{X: 1, Y: 1},
 					}
 					fieldsTiles = append(fieldsTiles, blackTile)
@@ -108,7 +108,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					}
 					blackTile.RenderComponent = common.RenderComponent{
 						Drawable: common.Rectangle{},
-						Color:    color.RGBA{0, 255, 0, 255},
+						Color:    color.RGBA{0, 0, 0, 255},
 						Scale:    engo.Point{X: 1, Y: 1},
 					}
 					fieldsTiles = append(fieldsTiles, blackTile)
@@ -122,7 +122,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					}
 					blackTile.RenderComponent = common.RenderComponent{
 						Drawable: common.Rectangle{},
-						Color:    color.RGBA{255, 0, 0, 255},
+						Color:    color.RGBA{0, 0, 0, 255},
 						Scale:    engo.Point{X: 1, Y: 1},
 					}
 					fieldsTiles = append(fieldsTiles, blackTile)
@@ -137,7 +137,7 @@ func (cb *TileBuildingSystem) generateFields() {
 					}
 					blackTile.RenderComponent = common.RenderComponent{
 						Drawable: common.Rectangle{},
-						Color:    color.RGBA{255, 0, 0, 255},
+						Color:    color.RGBA{0, 0, 0, 255},
 						Scale:    engo.Point{X: 1, Y: 1},
 					}
 					fieldsTiles = append(fieldsTiles, blackTile)

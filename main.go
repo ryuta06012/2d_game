@@ -19,7 +19,8 @@ func (*myScene) Type() string { return "myGame" }
 // Preload is called before loading any assets from the disk,
 // to allow you to register / queue them
 func (*myScene) Preload() {
-	engo.Files.Load("icon/pacman_close.png",
+	engo.Files.Load(
+		"icon/pacman_close.png",
 		"icon/pacman_open_up.png",
 		"icon/pacman_open_left.png",
 		"icon/pacman_open_right.png",
@@ -32,6 +33,8 @@ func (*myScene) Preload() {
 		"icon/pacman_left_middle.png",
 		"icon/pacman_right_open.png",
 		"icon/pacman_right_middle.png",
+		"sounds/chewing_sound_pattern1.mp3",
+		"sounds/chewing_sound_pattern2.mp3",
 	)
 }
 
@@ -45,6 +48,7 @@ func (*myScene) Setup(u engo.Updater) {
 	world, _ := u.(*ecs.World)
 	common.SetBackground(color.Black)
 	world.AddSystem(&common.RenderSystem{})
+	world.AddSystem(&common.AudioSystem{})
 	world.AddSystem(&systems.TileBuildingSystem{})
 	world.AddSystem(&systems.FoodSystem{})
 	world.AddSystem(&systems.PlayerMovementSystem{})
@@ -54,8 +58,10 @@ func main() {
 	fmt.Println("hello world!")
 	opts := engo.RunOptions{
 		Title:  "Pacman Field",
+		// Width:  21 * 32,
+		// Height: 23 * 32,
 		Width:  21 * 32,
-		Height: 23 * 32,
+		Height: 26 * 32,
 	}
 	engo.Run(opts, &myScene{})
 }

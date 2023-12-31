@@ -68,7 +68,7 @@ func (pms *PlayerMovementSystem) New(w *ecs.World) {
 	pms.field = Tiles
 	pms.fieldHeight = len(Tiles)
 	pms.fieldWidth = len(Tiles[0])
-	pms.speed = 32 / 16
+	pms.speed = 32 / 11
 	pms.direction = 4
 	pms.nextDirection = 4
 	for _, system := range pms.world.Systems() {
@@ -82,8 +82,6 @@ func (pms *PlayerMovementSystem) New(w *ecs.World) {
 // Update is ran every frame, with `dt` being the time
 // in seconds since the last frame
 func (pms *PlayerMovementSystem) Update(dt float32) {
-	// fmt.Println("###################")
-	fmt.Printf("dt: %v\n", dt)
 	pms.nextDirectionPlayer()
 	pms.changeDirectionIfPossible()
 	pms.changeDirectionTexture()
@@ -148,9 +146,6 @@ var animation int = 0
 var animationFrame uint64 = 5
 
 func (pms *PlayerMovementSystem) changeDirectionTexture() {
-	// fmt.Printf("frame: %v\n", frame)
-	// fmt.Printf("animationFrame: %v\n", animationFrame)
-	// fmt.Printf("pms.direction: %v\n", pms.direction)
 	switch pms.direction {
 	case DIRECTION_RIGHT: // Right
 		if frame%animationFrame == 0 {
@@ -214,17 +209,9 @@ func (pms *PlayerMovementSystem) changeDirectionIfPossible() {
 	pms.moveAdd()
 	if pms.checkCollisions() {
 		pms.moveDecrease()
-		// fmt.Printf("tempDirection: %v\n", tempDirection)
-		// fmt.Printf("pms.nextDirection: %v\n", pms.nextDirection)
-		// fmt.Printf("pms.direction: %v\n", pms.direction)
-		// fmt.Println("false")
 		pms.direction = tempDirection
 	} else {
-		// fmt.Printf("pms.nextDirection: %v\n", pms.nextDirection)
-		// fmt.Printf("pms.direction: %v\n", pms.direction)
-		// fmt.Println("###############################")
 		pms.moveDecrease()
-		//pms.changeDirectionTexture()
 	}
 }
 

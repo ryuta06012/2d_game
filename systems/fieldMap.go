@@ -59,7 +59,7 @@ func (cb *TileBuildingSystem) New(w *ecs.World) {
 // in seconds since the last frame
 func (cb *TileBuildingSystem) generateFields() {
 	tileSize := float32(32)
-	wallSpaceWidth := tileSize / 1.6
+	wallSpaceWidth := tileSize / 1.3
 	wallOffset := (tileSize - wallSpaceWidth) / 2
 	//wallInnerColor := color.RGBA{0, 0, 0, 255}
 	fieldsTiles := make([]*Tile, 0)

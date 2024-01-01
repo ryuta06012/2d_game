@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 
 	"image/color"
@@ -9,6 +10,7 @@ import (
 	"github.com/EngoEngine/engo"
 	"github.com/EngoEngine/engo/common"
 	"github.com/ryuta06012/2d_game/systems"
+	"golang.org/x/image/font/gofont/gosmallcaps"
 )
 
 type myScene struct{}
@@ -36,6 +38,7 @@ func (*myScene) Preload() {
 		"sounds/chewing_sound_pattern1.mp3",
 		"sounds/chewing_sound_pattern2.mp3",
 	)
+	engo.Files.LoadReaderData("go.ttf", bytes.NewReader(gosmallcaps.TTF))
 }
 
 // Setup is called before the main loop starts. It allows you
@@ -52,12 +55,13 @@ func (*myScene) Setup(u engo.Updater) {
 	world.AddSystem(&systems.TileBuildingSystem{})
 	world.AddSystem(&systems.FoodSystem{})
 	world.AddSystem(&systems.PlayerMovementSystem{})
+	world.AddSystem(&systems.ScoreSystem{})
 }
 
 func main() {
 	fmt.Println("hello world!")
 	opts := engo.RunOptions{
-		Title:  "Pacman Field",
+		Title: "Pacman Field",
 		// Width:  21 * 32,
 		// Height: 23 * 32,
 		Width:  21 * 32,

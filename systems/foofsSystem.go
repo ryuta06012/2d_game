@@ -110,11 +110,14 @@ func (f *FoodSystem) Update(dt float32) {
 	var count int = 0
 	for _, food := range f.foodEntity {
 		if food.isEat == false && food.mapX == playerMapX && food.mapY == playerMapY {
-			println(food.mapX%2)
-			println(food.mapY%2)
+			println(food.mapX % 2)
+			println(food.mapY % 2)
 			f.selectAudioPlayerByDirection(f.audioEntity, playerDirection, food.mapX, food.mapY)
 			food.isEat = true
 			food.RenderComponent.Color = color.RGBA{0, 0, 0, 255}
+			engo.Mailbox.Dispatch(HUDScoreMessage{
+				Score: 100,
+			})
 			break
 		}
 		count++

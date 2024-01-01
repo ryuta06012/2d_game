@@ -47,8 +47,8 @@ func (pms *PlayerMovementSystem) New(w *ecs.World) {
 	pms.world = w
 	fmt.Println("TileBuildingSystem was added to the Scene")
 	player := Player{BasicEntity: ecs.NewBasic()}
-	positionX := 32 * 4
-	positionY := 32 * 1
+	positionX := 32 * 10
+	positionY := 32 * 21
 	player.SpaceComponent = common.SpaceComponent{
 		Position: engo.Point{X: float32(positionX), Y: float32(positionY)},
 		Width:    32,
@@ -68,7 +68,7 @@ func (pms *PlayerMovementSystem) New(w *ecs.World) {
 	pms.field = Tiles
 	pms.fieldHeight = len(Tiles)
 	pms.fieldWidth = len(Tiles[0])
-	pms.speed = 32 / 11
+	pms.speed = 32 / 8
 	pms.direction = 4
 	pms.nextDirection = 4
 	for _, system := range pms.world.Systems() {

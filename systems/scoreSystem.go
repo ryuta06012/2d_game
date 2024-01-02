@@ -37,7 +37,7 @@ type ScoreSystem struct {
 
 func (st *ScoreSystem) New(w *ecs.World) {
 	fnt := &common.Font{
-		URL:  "go.ttf",
+		URL:  "emulogic.ttf",
 		FG:   color.White,
 		Size: 32,
 	}
@@ -46,6 +46,13 @@ func (st *ScoreSystem) New(w *ecs.World) {
 	st.text.RenderComponent.Drawable = common.Text{
 		Font: fnt,
 		Text: "0",
+	}
+	st.text.RenderComponent = common.RenderComponent{
+		Drawable: common.Text{
+			Font: fnt,
+			Text: "0",
+		},
+		Scale: engo.Point{X: 0.8, Y: 0.8},
 	}
 	st.text.SetShader(common.TextHUDShader)
 	st.text.RenderComponent.SetZIndex(1001)
@@ -60,13 +67,8 @@ func (st *ScoreSystem) New(w *ecs.World) {
 	}
 	engo.Mailbox.Listen(HUDScoreMessageType, func(m engo.Message) {
 		st.score++
-		sm, ok := m.(HUDScoreMessage)
-		if !ok {
-			return
-		}
-		fmt.Printf("#####################sm.Score: %v\n", sm.Score)
 		txt := st.text.RenderComponent.Drawable.(common.Text)
-		txt.Text = fmt.Sprintf("SCORE: %v", st.score)
+		txt.Text = fmt.Sprintf("SCORE: %v", st.score * 10)
 		st.text.RenderComponent.Drawable = common.Text{
 			Font: fnt,
 			Text: txt.Text,

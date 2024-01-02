@@ -67,12 +67,7 @@ func (cb *TileBuildingSystem) generateFields() {
 	for y, row := range Tiles {
 		for x, cell := range row {
 			if cell == 1 {
-				colors := color.RGBA{0, 0, 255, 255}
-				/* if x%2 == 0 {
-					colors = color.RGBA{0, 0, 255, 255}
-				} else {
-					colors = color.RGBA{100, 0, 255, 255}
-				} */
+				colors := color.RGBA{0, 100, 255, 255}
 				tile := &Tile{BasicEntity: ecs.NewBasic()}
 				tile.SpaceComponent = common.SpaceComponent{
 					Position: engo.Point{X: float32(x) * tileSize, Y: float32(y) * tileSize},

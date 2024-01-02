@@ -45,7 +45,7 @@ func (f *FoodSystem) New(w *ecs.World) {
 		audio.AudioComponent = common.AudioComponent{Player: player}
 		f.audioEntity = append(f.audioEntity, audio)
 	}
-	fmt.Println("TileBuildingSystem was added to the Scene")
+	fmt.Println("FoodSystemSystem was added to the Scene")
 	f.generateFoodsInFields()
 }
 

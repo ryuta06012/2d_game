@@ -27,6 +27,7 @@ type PlayerMovementSystem struct {
 	nextDirection    int
 	currentPositionX int
 	currentPositionY int
+	suspend          bool
 }
 
 const (
@@ -45,7 +46,7 @@ var AnimationFrameStop []string = []string{"icon/pacman_up_open.png", "icon/pacm
 // New is the initialisation of the System
 func (pms *PlayerMovementSystem) New(w *ecs.World) {
 	pms.world = w
-	fmt.Println("TileBuildingSystem was added to the Scene")
+	fmt.Println("PlayerMovementSystem was added to the Scene")
 	player := Player{BasicEntity: ecs.NewBasic()}
 	positionX := 32 * 10
 	positionY := 32 * 21
@@ -71,28 +72,35 @@ func (pms *PlayerMovementSystem) New(w *ecs.World) {
 	pms.speed = 32 / 8
 	pms.direction = 4
 	pms.nextDirection = 4
+	pms.suspend = true
 	for _, system := range pms.world.Systems() {
 		switch sys := system.(type) {
 		case *common.RenderSystem:
 			sys.Add(&player.BasicEntity, &player.RenderComponent, &player.SpaceComponent)
 		}
 	}
+	engo.Mailbox.Listen(HUDOpeningMessageType, func(m engo.Message) {
+		pms.suspend = false
+	})
 }
 
 // Update is ran every frame, with `dt` being the time
 // in seconds since the last frame
 func (pms *PlayerMovementSystem) Update(dt float32) {
-	pms.nextDirectionPlayer()
-	pms.changeDirectionIfPossible()
-	pms.changeDirectionTexture()
-	pms.moveAdd()
-	if pms.checkCollisions() {
-		pms.moveDecrease()
-		texture, err := common.LoadedSprite(AnimationFrameStop[pms.direction-1])
-		if err != nil {
-			fmt.Println("Unable to load texture: " + err.Error())
+	fmt.Printf("pms.suspend: %v\n", pms.suspend)
+	if !pms.suspend {
+		pms.nextDirectionPlayer()
+		pms.changeDirectionIfPossible()
+		pms.changeDirectionTexture()
+		pms.moveAdd()
+		if pms.checkCollisions() {
+			pms.moveDecrease()
+			texture, err := common.LoadedSprite(AnimationFrameStop[pms.direction-1])
+			if err != nil {
+				fmt.Println("Unable to load texture: " + err.Error())
+			}
+			pms.playerEntity.RenderComponent.Drawable = texture
 		}
-		pms.playerEntity.RenderComponent.Drawable = texture
 	}
 }
 

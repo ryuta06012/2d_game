@@ -3,6 +3,8 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
+	"log"
 
 	"image/color"
 
@@ -37,8 +39,15 @@ func (*myScene) Preload() {
 		"icon/pacman_right_middle.png",
 		"sounds/chewing_sound_pattern1.mp3",
 		"sounds/chewing_sound_pattern2.mp3",
+		"sounds/opening_audio.mp3",
 	)
+	fontData, err := ioutil.ReadFile("assets/font/emulogic.ttf")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	engo.Files.LoadReaderData("go.ttf", bytes.NewReader(gosmallcaps.TTF))
+	engo.Files.LoadReaderData("emulogic.ttf", bytes.NewReader(fontData))
 }
 
 // Setup is called before the main loop starts. It allows you
@@ -56,6 +65,7 @@ func (*myScene) Setup(u engo.Updater) {
 	world.AddSystem(&systems.FoodSystem{})
 	world.AddSystem(&systems.PlayerMovementSystem{})
 	world.AddSystem(&systems.ScoreSystem{})
+	world.AddSystem(&systems.SoundSystem{})
 }
 
 func main() {

@@ -37,6 +37,14 @@ func (*myScene) Preload() {
 		"icon/pacman_left_middle.png",
 		"icon/pacman_right_open.png",
 		"icon/pacman_right_middle.png",
+		"icon/goast/akabe/akabe_up_pattern1.png",
+		"icon/goast/akabe/akabe_up_pattern2.png",
+		"icon/goast/akabe/akabe_down_pattern1.png",
+		"icon/goast/akabe/akabe_down_pattern2.png",
+		"icon/goast/akabe/akabe_left_pattern1.png",
+		"icon/goast/akabe/akabe_left_pattern2.png",
+		"icon/goast/akabe/akabe_right_pattern1.png",
+		"icon/goast/akabe/akabe_right_pattern2.png",
 		"sounds/chewing_sound_pattern1.mp3",
 		"sounds/chewing_sound_pattern2.mp3",
 		"sounds/opening_audio.mp3",
@@ -61,11 +69,13 @@ func (*myScene) Setup(u engo.Updater) {
 	common.SetBackground(color.Black)
 	world.AddSystem(&common.RenderSystem{})
 	world.AddSystem(&common.AudioSystem{})
+	world.AddSystem(&common.AnimationSystem{})
 	world.AddSystem(&systems.TileBuildingSystem{})
 	world.AddSystem(&systems.FoodSystem{})
 	world.AddSystem(&systems.PlayerMovementSystem{})
 	world.AddSystem(&systems.ScoreSystem{})
 	world.AddSystem(&systems.SoundSystem{})
+	world.AddSystem(&systems.GoastSystem{})
 }
 
 func main() {
